@@ -64,3 +64,39 @@ const myEventEmitter = new MyEmitter();
 myEventEmitter.on('fancyEvent', eventHandler);
 myEventEmitter.emit('fancyEvent'); //Prints MyEmitter
 eventHandler(); //Prints NODE Global Scope
+
+console.log('----');
+
+//Dynamic this (call and apply)
+
+let theFunction = function () {
+    console.log(this);
+}
+theFunction.call(); //Without params, theFunction is invoked from the node
+let numbers = [
+    {
+        name: 'Thiago'
+    },
+    {
+        name: 'Livia'
+    },
+    {
+        name: 'Frida'
+    }
+];
+for (let i = 0; i < numbers.length; i++) {
+    console.log(this); // Prints {}
+}
+numbers.forEach(() => {
+    console.log(this); // Prints Node's Scope
+});
+
+for (let i = 0; i < numbers.length; i++) {
+    (function () {
+        console.log(this); // numbers Objects
+    }).call(numbers[i]); //Set a new scope
+}
+
+numbers.forEach(function () {
+    console.log(this); // this = Array [{ name: 'Mark' },{ name: 'Tom' },{ name: 'Travis' }]
+}, numbers); // BOOM, scope change!
